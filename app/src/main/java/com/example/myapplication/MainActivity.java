@@ -1,8 +1,11 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Constraints;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +30,40 @@ public class MainActivity extends AppCompatActivity {
     int score = 0;
     int numberOfQuestions = 0;
     TextView scoreTextView;
-
+    TextView timerTextView;
+    Button playAgainButton;
+    ConstraintLayout gameLayout;
     public void start(View view) {
         goButton.setVisibility(View.INVISIBLE);
+        gameLayout.setVisibility(View.VISIBLE);
+        playAgain(timerTextView);
+    }
+    public void playAgain(View view){
+        score = 0;
+        numberOfQuestions = 0;
+
+        timerTextView.setText("30s");
+        scoreTextView.setText(Integer.toString(score) + "/" + Integer.toString(numberOfQuestions));
+        newQuestion();
+        playAgainButton = findViewById(R.id.playAgainButton);
+        playAgainButton.setVisibility(View.INVISIBLE);
+        resultTextView.setVisibility(View.INVISIBLE);
+
+
+        new CountDownTimer(30100, 1000){
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timerTextView.setText((millisUntilFinished/1000)+ "s");
+            }
+
+            @Override
+            public void onFinish() {
+                resultTextView.setVisibility(View.INVISIBLE);
+                playAgainButton.setVisibility(View.VISIBLE);
+            }
+        }.start();
+
     }
 
     public void chooseAnswer(View view) {
@@ -41,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         }
         numberOfQuestions++;
         scoreTextView.setText(Integer.toString(score) + "/" + Integer.toString(numberOfQuestions));
+        resultTextView.setVisibility(View.VISIBLE);
         newQuestion();
     }
 
@@ -84,10 +119,14 @@ public class MainActivity extends AppCompatActivity {
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
+        gameLayout = findViewById(R.id.gameLayout);
 
         goButton = findViewById(R.id.gobutton);
+        timerTextView = findViewById(R.id.timmerTextView);
+        goButton.setVisibility(View.VISIBLE);
+        gameLayout.setVisibility(View.INVISIBLE);
 
-        newQuestion();
+
 
 
     }
